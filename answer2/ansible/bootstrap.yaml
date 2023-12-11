@@ -1,0 +1,75 @@
+---
+- name: Configure Linux Server
+  hosts: all
+  become: true
+  vars_files:
+     - host_vars/192.168.10.99.yaml
+
+  tasks:
+    - name: Install updates on CentOS
+      package:
+        name: "*"
+        state: latest
+        update_cache: yes
+      when: ansible_distribution == "CentOS"
+
+    - name: Create devops user with password and SSH key
+      user:
+        name: "{{ item.username }}"
+        password: "{{ item.userpass }}"
+        groups: wheel
+        createhome: yes
+      with_items: "{{ users }}"
+
+    - name: Add SSH key for all users
+      authorized_key:
+        user: "{{ item.username }}"
+        key: "{{ item.ssh_key }}"
+      with_items: "{{ users }}"
+
+    - name: Add sudoers file for devops user
+      copy:
+        src: files/sudoer_devops
+        dest: /etc/sudoers.d/devops
+        owner: root
+        group: root
+        mode: 0440
+    
+    - name: Configure Timezone
+      timezone:
+        name: Asia/Kathmandu
+    
+    - name: Add custom message of the day (motd)
+      template:
+        src: templates/motd.j2 
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: 0644
+    
+    - name: check install ntp package
+      yum:
+        name: ntp
+        state: present
+
+    - name: configure ntp.conf to hosts
+      template:
+        src: templates/ntp.j2
+        dest: /etc/ntp.conf
+        owner: root
+        group: root
+        mode: 0644
+    
+    - name: ensure ntpd is running and enabled
+      service:
+        name: ntpd
+        state: started
+        enabled: yes
+
+    - name: change root password
+      user:
+        name: root
+        password: "{{ item.userpass }}"
+        update_password: always
+      with_items: "{{ root }}"
+      when: item.username == "root"

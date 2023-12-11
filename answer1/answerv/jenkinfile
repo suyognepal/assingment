@@ -1,0 +1,31 @@
+pipeline {
+  agent any
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+  tools{
+      maven "maven"
+  }
+  stages {
+    stage('clone repo'){
+      steps {
+        git branch: 'main', credentialsId: 'githubpass', url: 'https://github.com/suyognepal/discovery_server.git'
+      }    
+    }
+    stage('Scan') {
+      steps {
+        withSonarQubeEnv(installationName: 'sonar') { 
+          sh 'mvn clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar'
+        }
+      }
+    }
+    
+    stage("Quality Gate") {
+      steps {
+        timeout(time: 2, unit: 'MINUTES') {
+          waitForQualityGate abortPipeline: true
+        }
+      }
+    }
+  }
+}

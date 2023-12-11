@@ -1,0 +1,21 @@
+---
+- name: Configure Linux Server
+  hosts: all
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: Update repository index on CentOS
+      yum:
+        update_cache: yes
+      when: ansible_distribution == "CentOS"
+
+  roles:
+    - base
+
+- name: Configure Web Servers
+  hosts: webserver
+  become: true
+
+  roles:
+    - web_servers

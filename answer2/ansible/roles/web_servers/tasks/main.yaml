@@ -1,0 +1,75 @@
+---
+- name: Install packages
+  package:
+     name:
+       - epel-release
+       - nginx
+     state: present
+     update_cache: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Allow traffic to http
+  firewalld:
+    service: http
+    permanent: true
+    state: enabled
+    immediate: yes
+    
+- name: Start nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Change Nginx Configuration
+  template:
+    src: templates/nginx.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  register: nginx
+  
+- name: Create Directory for Site1
+  file:
+    path: /usr/share/nginx/html/site1
+    state: directory
+
+- name: Create Directory for Site2
+  file:
+    path: /usr/share/nginx/html/site2
+    state: directory
+
+- name: Copy site1 html file
+  copy:
+    src: default_site.html
+    dest: /usr/share/nginx/html/site1/index.html
+
+- name: Copy site2 html file
+  copy:
+    src: site2.html
+    dest: /usr/share/nginx/html/site2/index.html
+    
+- name: Configure site1 vhosts
+  template:
+    src: templates/site1.j2
+    dest: /etc/nginx/conf.d/site1.conf
+    owner: root 
+    group: root
+    mode: 0644
+
+- name: Configure site2 vhosts
+  template:
+    src: templates/site2.j2
+    dest: /etc/nginx/conf.d/site2.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted
+  when: nginx.changed
+

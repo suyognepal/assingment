@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build and Push') {
+            steps {
+                // Get some code from a GitHub repository
+                script {
+                    git branch: 'main', credentialsId: 'githubpass', url: 'https://github.com/suyognepal/discovery_server.git'
+                    sh "docker build -t eureka_server:$BUILD_NUMBER ."
+                    sh "docker tag eureka_server:$BUILD_NUMBER 192.168.10.65:5000/eureka_server:$BUILD_NUMBER"
+                    sh "docker push 192.168.10.65:5000/eureka_server:$BUILD_NUMBER"
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    sshagent(['deployment-server']) {
+                        sh '''
+                            ssh -o "StrictHostKeyChecking=no" root@192.168.10.65 <<EOF
+                            docker stop eureka_server
+                            docker rm eureka_server
+                            docker run -itd --name eureka_server -p 8080:8080 192.168.10.65:5000/eureka_server:$BUILD_NUMBER
+                            docker ps
+                            <<EOF
+                            '''
+                }
+            }
+        }
+    }
+    }
+}

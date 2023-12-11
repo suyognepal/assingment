@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+  discovery-server:
+    build: 
+      context: ./discovery-server/
+      dockerfile: Dockerfile  
+    image: discovery
+    ports:
+      - "8761:8761"
+    networks:
+      - movienet
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+        reservations:
+          cpus: "0.2"
+          memory: "128M"
+    restart: always
+
+  moviecatalog:
+    build: 
+      context: ./movie-catalog-service/
+      dockerfile: Dockerfile
+    image: moviecatalog
+    ports:
+      - "8081:8081"
+    networks:
+      - movienet
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"  
+          memory: "256M"  
+        reservations:
+          cpus: "0.2"
+          memory: "128M"
+    depends_on:
+      - discovery-server
+    restart: always
+
+  movieinfo:
+    build: 
+      context: ./movie-info-service/
+      dockerfile: Dockerfile
+    image: movieinfo
+    ports:
+      - "8082:8082"
+    networks:
+      - movienet
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"  
+          memory: "256M"  
+        reservations:
+          cpus: "0.2"
+          memory: "128M"
+    depends_on:
+      - discovery-server
+    restart: always
+
+  ratingservice:
+    build: 
+      context: ./ratings-data-service/
+      dockerfile: Dockerfile
+    image: ratingservice
+    ports:
+      - "8083:8083"
+    networks:
+      - movienet
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"  
+          memory: "256M"  
+        reservations:
+          cpus: "0.2"
+          memory: "128M"
+    depends_on:
+      - discovery-server
+    restart: always
+
+networks:
+  movienet:
+    driver: bridge
+

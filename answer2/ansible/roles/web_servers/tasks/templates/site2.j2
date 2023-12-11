@@ -1,0 +1,17 @@
+server {
+    listen 80;
+    server_name site2.example.com;
+    # Define access log file and format
+    access_log /var/log/nginx/site2_access.log combined;
+
+    # Define error log file and logging level
+    error_log /var/log/nginx/site2_error.log error;
+
+    location / {
+        root /usr/share/nginx/html/site2;
+        index index.html;
+    }
+
+    # Add more configuration options as needed
+}
+

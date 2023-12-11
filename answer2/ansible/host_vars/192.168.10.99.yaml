@@ -1,0 +1,13 @@
+users:
+ - username: devops
+   userpass: $6$a9pMCcqEa9rT1wfT$LVTf2w86SLpleqjI4g5tSYpdQ9fL1dscYHB4y8z6hZJcfgpqg5ElcxQXK1LHkBdfdD9TRAWgHa11avCjLPYQx1
+   ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDKIKQzNkOP6D94IMV1RPTgg9l6RdzNp4ouai9wBy6rQxCu3F09AFi9N+DWUsZgygDfCx92fxEfghXka2WEUzmEV/jLpcFoGCFZ1iPE4CwOv4B5o+CTV48wwIRJ/WQwyBGiWiUcBWHOXWCV8O74N0mA4Hhdfd9K7cd111oHPr+flKNoOi9BWlnRYjOeNX9tu6Blt4MaCyvdIkUAECdV6IRqR+YU4LVsHjWKU88cSOg0A5n+vXxxiLRzdw7Yq9YsHeatO37FafLMcqAeeIh8UsubrkfaLOk9PUsaX8c9x3ztluNInMl49+cjOy5VWY1y29HFrh6ys8DTtK/2cwhu3+ir ansible" 
+ 
+ - username: developer
+   userpass: $6$iVGq/vkShyM7Nkaa$6NTgz1Gjf6rhrErcOps4ktBz5fZaq.qgeRhFZ4pM6kpSmAoszHBYhA03VTpKjgJG3N6ddzEAeSB8sin.DqnSS1 
+   ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDNxJ06tLpy1Vaiug630bEGrRIjiBuVGSPUFyKehsr5dxFlDcQCYto0KonP7BtHXpeHF5/7xeaiSEO4JLNAp/Nz/YGjkK+OF5jOI8FzgjPkHercxs2HVc7AL9yhkECjZPUtr9QB/+QcsiwXQmGVh0H0z7/03OvsvkG6eL/X/+r+MVmTYyZbVuI4+jrXr9Qp1IF1TU0eS7tmLvop7Fg8N3/i9XdClMl03Unl6eCnisj0rre+x3/eLZKWzV95r96hbi6biXNDxSOdHWjytQoZlco1dJHHrIfGZJS46R+z8UlnB+cMqF3sWXHkVn1jp8U50jCkzd1Mzw/QHmmRHhzQ0qYL root@ansible-server"
+ 
+root:
+ - username: root 
+   userpass: $6$6M.rrHOA0pw88YGK$0xW7vWAQoj95ekgoUmVZS6eleX9Xuizl8/OEzPveWG5Ss8oYksL6tGMEWrrZdkg7Mt8EGzL9ko1SfODQ8/yVz.
+ 
